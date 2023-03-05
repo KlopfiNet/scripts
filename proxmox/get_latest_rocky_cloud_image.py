@@ -15,22 +15,29 @@ imageCheck = "http://download.rockylinux.org/pub/rocky/9.1/images/x86_64/Rocky-9
 targetFile = "/mnt/pve/source/Rocky-9-GenericCloud.latest.x86_64.qcow2"
 
 def get_remote_image():
+    print("Getting remote image...")
     # Expects storage to be mapped at /mnt/pve/source
     if not Path(targetFile).is_file():
         try:
             urllib.request.urlretrieve(imageUrl, targetFile)
             urllib.request.urlretrieve(imageCheck, (targetFile + ".CHECKSUM"))
+            print("> Got file.")
         except Exception as err:
             sys.exit("Error downloading file: " + err)
+    else:
+        print("> File already exists.")
 
 def get_remote_checksum():
+    print("Getting remote checksum...")
     try:
         urllib.request.urlretrieve(imageCheck, (targetFile + ".CHECKSUM"))
-        print("Got checksum.")
+        print("> Got checksum.")
     except Exception as err:
         sys.exit("Error downloading checksum: " + err)
         
 def get_sha256_checksum(file):
+    print("Calculating file hash...")
+    
     # Calculate actual file hash
     actual_hash = hashlib.sha256()
     with open(file, "rb") as f:
